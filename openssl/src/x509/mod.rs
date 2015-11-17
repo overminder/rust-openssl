@@ -454,6 +454,12 @@ impl<'ctx> X509<'ctx> {
         self.handle
     }
 
+    pub fn into_handle(self) -> *mut ffi::X509 {
+        let res = self.handle;
+        { self }.owned = false;
+        res
+    }
+
     pub fn subject_name<'a>(&'a self) -> X509Name<'a> {
         let name = unsafe { ffi::X509_get_subject_name(self.handle) };
         X509Name {
