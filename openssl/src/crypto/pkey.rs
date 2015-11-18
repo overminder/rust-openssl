@@ -186,6 +186,7 @@ impl PKey {
             ffi::RSA_free(rsa);
 
             s.truncate(r as usize);
+            ffi::RSA_free(rsa);
             s
         }
     }

@@ -705,6 +705,7 @@ extern "C" {
 
     pub fn X509_STORE_CTX_get_current_cert(ct: *mut X509_STORE_CTX) -> *mut X509;
     pub fn X509_STORE_CTX_get_error(ctx: *mut X509_STORE_CTX) -> c_int;
+    pub fn X509_STORE_CTX_set_error(ctx: *mut X509_STORE_CTX, err: c_int);
     pub fn X509_STORE_CTX_get_ex_data(ctx: *mut X509_STORE_CTX, idx: c_int) -> *mut c_void;
 
     pub fn X509V3_EXT_conf_nid(conf: *mut c_void, ctx: *mut X509V3_CTX, ext_nid: c_int, value: *mut c_char) -> *mut X509_EXTENSION;

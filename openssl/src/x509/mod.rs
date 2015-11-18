@@ -90,6 +90,11 @@ impl X509StoreContext {
         X509ValidationError::from_raw(err)
     }
 
+    pub fn set_error(&self, e: Option<X509ValidationError>) {
+        unsafe { ffi::X509_STORE_CTX_set_error(self.ctx,
+                                               X509ValidationError::to_raw(e)) }
+    }
+
     pub fn get_current_cert<'a>(&'a self) -> Option<X509<'a>> {
         let ptr = unsafe { ffi::X509_STORE_CTX_get_current_cert(self.ctx) };
 
@@ -639,6 +644,15 @@ macro_rules! make_validation_error(
                     ffi::$ok_val => None,
                     $(ffi::$val => Some(X509ValidationError::$name),)+
                     err => Some(X509ValidationError::X509UnknownError(err))
+                }
+            }
+
+            #[doc(hidden)]
+            pub fn to_raw(thiz: Option<Self>) -> c_int {
+                match thiz {
+                    $(Some(X509ValidationError::$name) => ffi::$val,)+
+                    None => ffi::$ok_val,
+                    Some(X509ValidationError::X509UnknownError(err)) => err,
                 }
             }
         }
