@@ -516,6 +516,15 @@ impl SslContext {
         SslContext { ctx: ctx }
     }
 
+    pub fn get_raw(&mut self) -> *mut ffi::SSL_CTX {
+        self.ctx
+    }
+
+    pub unsafe fn with_raw<A, F: FnMut(&mut Self) -> A>(ctx: *mut ffi::SSL_CTX, mut f: F) -> A {
+        let mut ctx = SslContext::new_ref(ctx);
+        f(&mut ctx)
+    }
+
     /// Creates a new SSL context.
     pub fn new(method: SslMethod) -> Result<SslContext, SslError> {
         init();
