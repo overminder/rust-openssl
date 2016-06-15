@@ -578,7 +578,7 @@ impl SslContext {
     pub fn set_servername_callback(&mut self, callback: Option<ServerNameCallback>) {
         unsafe {
             ffi::SSL_CTX_set_ex_data(self.ctx, SNI_IDX, mem::transmute(callback));
-            let f: extern "C" fn() = mem::transmute(raw_sni);
+            let f: extern "C" fn() = mem::transmute(raw_sni as usize);
             ffi_extras::SSL_CTX_set_tlsext_servername_callback(self.ctx, Some(f));
         }
     }
@@ -595,7 +595,7 @@ impl SslContext {
             ffi::SSL_CTX_set_ex_data(self.ctx, SNI_IDX, mem::transmute(Some(callback)));
 
             ffi_extras::SSL_CTX_set_tlsext_servername_arg(self.ctx, mem::transmute(data));
-            let f: extern "C" fn() = mem::transmute(raw_sni_with_data::<T>);
+            let f: extern "C" fn() = mem::transmute(raw_sni_with_data::<T> as usize);
             ffi_extras::SSL_CTX_set_tlsext_servername_callback(self.ctx, Some(f));
         }
     }
